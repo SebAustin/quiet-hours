@@ -1,0 +1,35 @@
+{
+  "message": {
+    "role": "assistant",
+    "content": [
+      {
+        "text": "<thinking> I need to first look up the water bill for Austin Water to get the amount due. Once I have the amount, I can proceed to pay the bill. </thinking>\n"
+      },
+      {
+        "toolUse": {
+          "toolUseId": "tooluse_Opi6XuJV7dE2IPbVCsioDo",
+          "name": "lookup_bill",
+          "input": {
+            "vendor": "Austin Water"
+          }
+        }
+      }
+    ],
+    "metadata": {
+      "usage": {
+        "inputTokens": 494,
+        "outputTokens": 55,
+        "totalTokens": 549
+      },
+      "metrics": {
+        "latencyMs": 805,
+        "timeToFirstByteMs": 926
+      }
+    },
+    "tracking_id": "e3948574-0cee-4208-8499-ba5532875ad9"
+  },
+  "message_id": 1,
+  "redact_message": null,
+  "created_at": "2026-09-11T23:26:26.125333+00:00",
+  "updated_at": "2026-09-11T23:26:26.125357+00:00"
+}

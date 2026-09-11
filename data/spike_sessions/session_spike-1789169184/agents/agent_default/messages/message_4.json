@@ -1,0 +1,23 @@
+{
+  "message": {
+    "role": "user",
+    "content": [
+      {
+        "toolResult": {
+          "toolUseId": "tooluse_NN2r1SXk6mPSypEKvMsUPf",
+          "status": "success",
+          "content": [
+            {
+              "text": "Paid Austin Water $62.10 (confirmation QH-6210)"
+            }
+          ]
+        }
+      }
+    ],
+    "tracking_id": "3fbed11a-1d60-4560-b5f9-3e3b1a0f90ae"
+  },
+  "message_id": 4,
+  "redact_message": null,
+  "created_at": "2026-09-11T23:26:27.504577+00:00",
+  "updated_at": "2026-09-11T23:26:27.504580+00:00"
+}

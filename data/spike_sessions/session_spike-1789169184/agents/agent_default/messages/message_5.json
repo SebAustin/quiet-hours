@@ -1,0 +1,26 @@
+{
+  "message": {
+    "role": "assistant",
+    "content": [
+      {
+        "text": "The water bill for Austin Water has been paid. The amount of $62.10 was successfully transferred. Confirmation number is QH-6210."
+      }
+    ],
+    "metadata": {
+      "usage": {
+        "inputTokens": 715,
+        "outputTokens": 35,
+        "totalTokens": 750
+      },
+      "metrics": {
+        "latencyMs": 636,
+        "timeToFirstByteMs": 588
+      }
+    },
+    "tracking_id": "5450f6c8-a455-4810-82b0-9b85756ee0ad"
+  },
+  "message_id": 5,
+  "redact_message": null,
+  "created_at": "2026-09-11T23:26:28.350870+00:00",
+  "updated_at": "2026-09-11T23:26:28.350899+00:00"
+}

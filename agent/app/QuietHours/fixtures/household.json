@@ -1,0 +1,38 @@
+{
+  "household": "The Rivera household",
+  "city": "Austin, TX",
+  "members": [
+    {"name": "Maya Rivera", "role": "adult", "email": "maya@rivera.family", "phone": "512-555-0142"},
+    {"name": "Daniel Rivera", "role": "adult", "email": "daniel@rivera.family"},
+    {"name": "Leo Rivera", "role": "child", "age": 9, "school": "Barton Hills Elementary", "grade": "4th", "teacher": "Ms. Okafor", "allergies": "none", "emergency_contact": "Maya Rivera 512-555-0142"}
+  ],
+  "address": {"street": "1408 Bluebonnet Ln", "city": "Austin", "state": "TX", "zip": "78704"},
+  "accounts": [
+    {"id": "checking-4821", "label": "Chase checking ****4821", "purpose": "autopay"},
+    {"id": "credit-9930", "label": "Amex ****9930", "purpose": "subscriptions"}
+  ],
+  "preferences": {
+    "autopay_cap": 150,
+    "anomaly_band_pct": 25,
+    "price_increase_threshold_pct": 10,
+    "appointments": {"preferred_days": ["Tuesday", "Thursday"], "earliest": "15:00", "latest": "17:30", "note": "After school pickup, before dinner"},
+    "deliveries": {"if_nobody_home": "reschedule to Saturday morning", "signature_ok_days": ["Saturday"]},
+    "safety": ["Never pay from a link inside an email; always use the vendor's known portal", "Compare quotes when insurance rises more than 10%"],
+    "quiet_hours": "Do not ping between 21:00 and 07:00"
+  },
+  "bill_history": {
+    "Austin Water": {"account": "checking-4821", "recent": [56.4, 59.2, 61.0, 57.8, 58.9, 60.3], "cadence": "monthly"},
+    "Austin Energy": {"account": "checking-4821", "recent": [112.5, 118.2, 121.9, 119.4, 116.0, 120.8], "cadence": "monthly"},
+    "Spectrum Internet": {"account": "checking-4821", "recent": [79.99, 79.99, 79.99, 79.99, 79.99, 79.99], "cadence": "monthly"},
+    "Netflix": {"account": "credit-9930", "recent": [15.49, 15.49, 15.49, 15.49, 15.49, 15.49], "cadence": "monthly"},
+    "Lonestar Auto Insurance": {"account": "checking-4821", "recent": [1196.0, 1196.0], "cadence": "6 months"}
+  },
+  "calendar": [
+    {"day": 1, "weekday": "Monday", "title": "Maya: work offsite", "start": "09:00", "end": "18:00"},
+    {"day": 2, "weekday": "Tuesday", "title": "Daniel: on-call shift (nobody home)", "start": "08:00", "end": "19:00"},
+    {"day": 2, "weekday": "Tuesday", "title": "Leo: soccer practice", "start": "17:45", "end": "18:45"},
+    {"day": 4, "weekday": "Thursday", "title": "Maya: dentist (own)", "start": "10:00", "end": "11:00"},
+    {"day": 6, "weekday": "Saturday", "title": "Free morning", "start": "08:00", "end": "12:00"},
+    {"day": 9, "weekday": "Tuesday", "title": "Free afternoon", "start": "15:00", "end": "18:00"}
+  ]
+}
