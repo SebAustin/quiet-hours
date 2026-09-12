@@ -93,10 +93,14 @@ class HouseholdTools:
     @tool
     def submit_form(self, item_id: str, form_name: str, fields: dict, fee: float = 0.0, requires_signature: bool = False) -> str:
         """Fill and submit a form with values from the household profile. Set fee and requires_signature honestly."""
-        summary = ", ".join(f"{k}={v}" for k, v in fields.items())
-        outcome = f"Submitted '{form_name}' ({summary})" + (f", fee ${fee:,.2f}" if fee else "") + (", signed by guardian" if requires_signature else "")
+        who = fields.get("student_name") or fields.get("player_name") or fields.get("name") or "the household"
+        outcome = f"Submitted '{form_name.replace('_', ' ')}' for {who} with {len(fields)} fields from the profile" + (f", fee ${fee:,.2f}" if fee else "") + (", signed by guardian" if requires_signature else "")
+        item = self.store.get_item(item_id)
+        if item:
+            item.metadata["form_fields"] = fields
+            self.store.upsert_item(item)
         self._finish(item_id, ItemStatus.HANDLED, outcome)
-        return outcome
+        return outcome + ". Fields: " + ", ".join(f"{k}={v}" for k, v in fields.items())
 
     @tool
     def reschedule_delivery(self, item_id: str, carrier: str, new_day: int, new_weekday: str, window: str) -> str:

@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Quiet Hours architecture</title>
+<style>
+body{margin:0;background:#111b30;color:#e8e2d4;font-family:"IBM Plex Sans",Helvetica,Arial,sans-serif}
+.wrap{width:1600px;height:900px;padding:40px 56px;box-sizing:border-box;position:relative}
+h1{font-family:Georgia,serif;font-weight:500;font-size:34px;margin:0}
+h1 em{color:#e7b04a;font-style:italic}
+.sub{color:#a9b0c2;margin:6px 0 0;font-size:16px}
+.box{position:absolute;border:1px solid rgba(232,226,212,.18);border-radius:8px;padding:14px 16px;background:#0b1324}
+.box b{display:block;font-size:17px;margin-bottom:4px}
+.box span{color:#a9b0c2;font-size:13px;line-height:1.35;display:block}
+.paper{background:#f5efe3;color:#1b2233;border-color:#f5efe3}
+.paper span{color:#4b5468}
+.paper::before{content:"";position:absolute;left:16px;top:-1px;width:38px;height:3px;background:#e7b04a;border-radius:0 0 3px 3px}
+.aws{border-color:rgba(231,176,74,.55)}
+.k{font-family:"IBM Plex Mono",Menlo,monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#a9b0c2}
+svg{position:absolute;left:0;top:0;width:1600px;height:900px;pointer-events:none}
+.l{stroke:#a9b0c2;stroke-width:2;fill:none}
+.l.hot{stroke:#e7b04a}
+.l.ok{stroke:#38a874}
+text{fill:#a9b0c2;font-family:"IBM Plex Mono",Menlo,monospace;font-size:12px}
+.foot{position:absolute;left:56px;bottom:34px;color:#a9b0c2;font-size:13px}
+</style></head><body><div class="wrap">
+<h1>Quiet Hours <em>— how a sweep becomes a decision, and a decision becomes a standing permission</em></h1>
+<p class="sub">Strands Agents SDK on Amazon Bedrock AgentCore · Agents for Humans hackathon</p>
+<svg viewBox="0 0 1600 900">
+ <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a9b0c2"/></marker>
+ <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#e7b04a"/></marker>
+ <marker id="ag" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#38a874"/></marker></defs>
+ <!-- scheduler -> lambda -->
+ <path class="l" d="M300,230 L410,230" marker-end="url(#a)"/><text x="315" y="220">every 30 min</text>
+ <!-- dashboard -> lambda -->
+ <path class="l" d="M300,395 L410,330" marker-end="url(#a)"/><text x="310" y="380">GET /state · POST /decisions</text>
+ <!-- lambda -> runtime -->
+ <path class="l hot" d="M640,270 L760,270" marker-end="url(#ah)"/><text x="648" y="258">InvokeAgentRuntime</text><text x="648" y="292">sweep · resume · chat</text>
+ <!-- runtime -> bedrock -->
+ <path class="l" d="M1010,190 L1160,150" marker-end="url(#a)"/>
+ <!-- runtime -> dynamodb -->
+ <path class="l" d="M1010,270 L1160,270" marker-end="url(#a)"/>
+ <!-- runtime -> s3 -->
+ <path class="l hot" d="M1010,330 L1160,390" marker-end="url(#ah)"/><text x="1030" y="378">parked interrupt</text>
+ <!-- runtime -> memory -->
+ <path class="l ok" d="M1010,380 L1160,510" marker-end="url(#ag)"/><text x="1030" y="470">learned preference</text>
+ <!-- runtime -> observability -->
+ <path class="l" d="M1010,420 L1160,630" marker-end="url(#a)"/>
+ <!-- runtime -> slack -->
+ <path class="l hot" d="M880,470 L880,600" marker-end="url(#ah)"/><text x="892" y="540">decision card</text>
+ <!-- slack -> lambda -->
+ <path class="l hot" d="M760,650 L525,650 L525,350" marker-end="url(#ah)"/><text x="540" y="640">signed one-click link</text>
+ <!-- lambda -> dashboard redirect -->
+</svg>
+<div class="box aws" style="left:56px;top:190px;width:244px"><div class="k">AWS</div><b>EventBridge Scheduler</b><span>Triggers a background sweep on a cadence. No app to open.</span></div>
+<div class="box paper" style="left:56px;top:360px;width:244px"><div class="k">Vercel</div><b>Next.js dashboard</b><span>Decision inbox, "handled quietly" timeline, interruptions trend, ask box.</span></div>
+<div class="box aws" style="left:410px;top:190px;width:230px;height:150px"><div class="k">AWS</div><b>Lambda API</b><span>Function URL. Reads DynamoDB for the dashboard, invokes the runtime, verifies HMAC-signed decision links.</span></div>
+<div class="box aws" style="left:760px;top:120px;width:250px;height:350px;border-color:#e7b04a"><div class="k">AWS · Bedrock AgentCore Runtime</div><b>Strands agent</b>
+<span>• Triage agent → structured output</span><span>• One specialist per item (bills · scheduling · paperwork)</span><span>• 13 household tools</span><span>• <b style="display:inline;font-size:13px;color:#e7b04a">HumanInTheLoop</b> intervention with a deterministic autonomy policy as classifier</span><span>• Interrupt before a write tool → decision card; resume later with the human's answer</span><span>• Audit hook on every tool call</span></div>
+<div class="box" style="left:1160px;top:110px;width:250px"><div class="k">AWS</div><b>Amazon Bedrock models</b><span>Nova 2 Lite for triage/chat, Nova Pro or Claude for specialists.</span></div>
+<div class="box aws" style="left:1160px;top:230px;width:250px"><div class="k">AWS</div><b>DynamoDB</b><span>Items, actions (audit), decision cards, trust ledger, demo clock.</span></div>
+<div class="box aws" style="left:1160px;top:350px;width:250px"><div class="k">AWS</div><b>S3 · Strands session store</b><span>The paused specialist's state lives here until the human answers, minutes or days later.</span></div>
+<div class="box aws" style="left:1160px;top:470px;width:250px"><div class="k">AWS</div><b>AgentCore Memory</b><span>USER_PREFERENCE + SEMANTIC strategies. Every decision becomes a remembered preference.</span></div>
+<div class="box" style="left:1160px;top:590px;width:250px"><div class="k">AWS</div><b>CloudWatch · AgentCore Observability</b><span>Traces per invocation.</span></div>
+<div class="box paper" style="left:760px;top:600px;width:250px"><div class="k">Household</div><b>Slack</b><span>One card per real decision: Approve · Approve and trust · Decline. Everything else stays quiet.</span></div>
+<div class="foot">Amber = the human-in-the-loop path. Green = learning. Grey = data and observability.</div>
+</div></body></html>

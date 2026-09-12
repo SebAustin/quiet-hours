@@ -8,6 +8,7 @@ export default function Timeline({ actions, items }: { actions: Action[]; items:
   const rows = [...actions].reverse();
   if (!rows.length) return <div className="empty"><strong>Nothing yet.</strong>Run a sweep and the quiet work shows up here.</div>;
   return (
+    <div className="timeline-wrap">
     <ol className="timeline">
       {rows.map((a) => {
         const item = a.item_id ? byId.get(a.item_id) : undefined;
@@ -25,5 +26,6 @@ export default function Timeline({ actions, items }: { actions: Action[]; items:
         );
       })}
     </ol>
+    </div>
   );
 }

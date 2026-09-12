@@ -95,6 +95,7 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 @keyframes pin { from { opacity: 0; transform: translateY(6px) rotate(-0.4deg); } to { opacity: 1; transform: none; } }
 
 /* Timeline of quiet work */
+.timeline-wrap { max-height: 64vh; overflow-y: auto; padding-right: 6px; scrollbar-width: thin; scrollbar-color: var(--board-line) transparent; }
 .timeline { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--board-line); }
 .timeline li { position: relative; padding: 0 0 var(--space-3) var(--space-4); }
 .timeline li::before { content: ""; position: absolute; left: -5px; top: 7px; width: 9px; height: 9px; border-radius: 50%; background: var(--sage); box-shadow: 0 0 0 3px var(--board); }

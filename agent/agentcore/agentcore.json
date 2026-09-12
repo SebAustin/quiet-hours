@@ -31,15 +31,15 @@
         },
         {
           "name": "QH_DASHBOARD_URL",
-          "value": "http://localhost:3000"
+          "value": "https://quiet-hours-five.vercel.app"
         },
         {
           "name": "QH_DECISION_SECRET",
-          "value": "dea28f41aeb6babf7ded963697c1418d"
+          "value": "${QH_DECISION_SECRET}"
         },
         {
           "name": "QH_SLACK_WEBHOOK_URL",
-          "value": ""
+          "value": "${QH_SLACK_WEBHOOK_URL}"
         },
         {
           "name": "QH_FAST_MODEL",
