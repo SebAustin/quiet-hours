@@ -1,6 +1,15 @@
 "use client";
 import type { Action, Item } from "@/lib/types";
 
+function declined(a: Action): string {
+  const i = a.input;
+  const money = typeof i.amount === "number" ? ` $${(i.amount as number).toFixed(2)}` : "";
+  if (a.tool === "pay_bill") return `Declined: pay ${i.vendor}${money}`;
+  if (a.tool === "schedule_appointment") return `Declined: book ${i.for_member} with ${i.provider}`;
+  if (a.tool === "submit_form") return `Declined: submit ${String(i.form_name ?? "form").replace(/_/g, " ")}`;
+  return `Declined: ${a.tool.replace(/_/g, " ")}`;
+}
+
 const verbs: Record<string, string> = { pay_bill: "Paid", schedule_appointment: "Booked", submit_form: "Submitted", reschedule_delivery: "Rescheduled", report_suspicious: "Flagged", snooze: "Snoozed", mark_handled: "Closed" };
 
 export default function Timeline({ actions, items }: { actions: Action[]; items: Item[] }) {
@@ -17,7 +26,7 @@ export default function Timeline({ actions, items }: { actions: Action[]; items:
           <li key={a.id} className={cls}>
             <div className="day">Day {a.sim_day ?? "–"}</div>
             <div className="what">
-              {a.outcome.startsWith("Declined") ? a.outcome : a.outcome || `${verbs[a.tool] ?? a.tool} ${item?.vendor ?? ""}`}
+              {a.mode === "denied" ? declined(a) : a.outcome || `${verbs[a.tool] ?? a.tool} ${item?.vendor ?? ""}`}
               {a.mode !== "autonomous" && <span className={`badge ${a.mode}`}>{a.mode === "trusted" ? "you trusted this" : a.mode === "approved" ? "you approved" : "you declined"}</span>}
               {a.tool === "report_suspicious" && <span className="badge flagged">blocked</span>}
             </div>
