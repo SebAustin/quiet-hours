@@ -8,6 +8,8 @@ Built for the AWS *Agents for Humans* hackathon (Everyday Agents track) with the
 
 Live demo: **https://quiet-hours-five.vercel.app**
 
+![Quiet Hours dashboard](docs/dashboard.png)
+
 ---
 
 ## The problem
@@ -70,6 +72,8 @@ flowchart LR
   RT -->|decision card| SLK[Slack]
   SLK -->|signed one-click link| API
 ```
+
+![Architecture](docs/architecture.png)
 
 See [docs/architecture.md](docs/architecture.md) for the request flows.
 
