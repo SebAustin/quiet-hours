@@ -5,7 +5,7 @@ body{margin:0;background:#111b30;color:#e8e2d4;font-family:"IBM Plex Sans",Helve
 h1{font-family:Georgia,serif;font-weight:500;font-size:34px;margin:0}
 h1 em{color:#e7b04a;font-style:italic}
 .sub{color:#a9b0c2;margin:6px 0 0;font-size:16px}
-.box{position:absolute;border:1px solid rgba(232,226,212,.18);border-radius:8px;padding:14px 16px;background:#0b1324}
+.box{position:absolute;box-sizing:border-box;border:1px solid rgba(232,226,212,.18);border-radius:8px;padding:14px 16px;background:#0b1324}
 .box b{display:block;font-size:17px;margin-bottom:4px}
 .box span{color:#a9b0c2;font-size:13px;line-height:1.35;display:block}
 .paper{background:#f5efe3;color:#1b2233;border-color:#f5efe3}
@@ -27,19 +27,19 @@ text{fill:#a9b0c2;font-family:"IBM Plex Mono",Menlo,monospace;font-size:12px}
  <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#e7b04a"/></marker>
  <marker id="ag" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#38a874"/></marker></defs>
  <!-- scheduler -> lambda -->
- <path class="l" d="M300,230 L410,230" marker-end="url(#a)"/><text x="315" y="220">every 30 min</text>
+ <path class="l" d="M300,230 L410,230" marker-end="url(#a)"/><text x="312" y="220">every 30 min</text>
  <!-- dashboard -> lambda -->
  <path class="l" d="M300,395 L410,330" marker-end="url(#a)"/><text x="310" y="380">GET /state · POST /decisions</text>
  <!-- lambda -> runtime -->
- <path class="l hot" d="M640,270 L760,270" marker-end="url(#ah)"/><text x="648" y="258">InvokeAgentRuntime</text><text x="648" y="292">sweep · resume · chat</text>
+ <path class="l hot" d="M640,270 L760,270" marker-end="url(#ah)"/><text x="650" y="256">Invoke</text><text x="650" y="292">sweep·resume·chat</text>
  <!-- runtime -> bedrock -->
  <path class="l" d="M1010,190 L1160,150" marker-end="url(#a)"/>
  <!-- runtime -> dynamodb -->
  <path class="l" d="M1010,270 L1160,270" marker-end="url(#a)"/>
  <!-- runtime -> s3 -->
- <path class="l hot" d="M1010,330 L1160,390" marker-end="url(#ah)"/><text x="1030" y="378">parked interrupt</text>
+ <path class="l hot" d="M1010,330 L1160,390" marker-end="url(#ah)"/><text x="1022" y="362">parked interrupt</text>
  <!-- runtime -> memory -->
- <path class="l ok" d="M1010,380 L1160,510" marker-end="url(#ag)"/><text x="1030" y="470">learned preference</text>
+ <path class="l ok" d="M1010,380 L1160,510" marker-end="url(#ag)"/><text x="1022" y="500">learned preference</text>
  <!-- runtime -> observability -->
  <path class="l" d="M1010,420 L1160,630" marker-end="url(#a)"/>
  <!-- runtime -> slack -->
