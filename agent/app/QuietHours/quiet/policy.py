@@ -54,6 +54,8 @@ class AutonomyPolicy:
         history = (self._profile().get("bill_history") or {}).get(vendor or "", None)
         if amount is None:
             return PolicyVerdict(False, "no amount given for a payment")
+        if item and item.amount is not None and abs(amount - float(item.amount)) > 0.005:
+            return PolicyVerdict(False, f"the agent proposed ${amount:,.2f} but the bill says ${item.amount:,.2f}")
         if not history:
             if amount > cap:
                 return PolicyVerdict(False, f"{vendor or 'this vendor'} is new and ${amount:,.2f} is above your ${cap:,.0f} autopay cap")

@@ -72,3 +72,13 @@ def test_low_risk_writes_are_free(store):
     p = AutonomyPolicy(store)
     for tool in ("reschedule_delivery", "report_suspicious", "snooze", "mark_handled"):
         assert p.judge(tool, {"item_id": "it-delivery"}).proceed
+
+
+def test_amount_mismatch_is_escalated_and_tool_rejects(store):
+    from quiet.memory import HouseholdMemory
+    from quiet.config import load_settings
+    from quiet.tools import HouseholdTools
+    v = AutonomyPolicy(store).judge("pay_bill", {"item_id": "it-energy-sep", "vendor": "Austin Energy", "amount": 150.0})
+    assert not v.proceed and "bill says $214.37" in v.reason
+    tools = HouseholdTools(store, HouseholdMemory(load_settings()))
+    assert tools.pay_bill(item_id="it-energy-sep", vendor="Austin Energy", amount=150.0, account_id="checking-4821").startswith("REJECTED")

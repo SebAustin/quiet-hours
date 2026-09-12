@@ -68,7 +68,13 @@ class HouseholdTools:
 
     @tool
     def pay_bill(self, item_id: str, vendor: str, amount: float, account_id: str) -> str:
-        """Pay a bill from a household account through the vendor's known portal. Money moves; irreversible."""
+        """Pay a bill from a household account through the vendor's known portal. Money moves; irreversible.
+        The amount must be exactly the amount on the bill."""
+        item = self.store.get_item(item_id)
+        if item and item.amount is not None and abs(float(amount) - float(item.amount)) > 0.005:
+            return f"REJECTED: the bill amount is ${item.amount:,.2f}; you asked to pay ${amount:,.2f}. Use the exact bill amount."
+        if item and item.metadata.get("suspicious"):
+            return "REJECTED: this item is flagged as suspicious. Never pay it."
         confirmation = f"QH-{abs(hash((item_id, vendor, amount))) % 10_000_000:07d}"
         outcome = f"Paid {vendor} ${amount:,.2f} from {account_id} (confirmation {confirmation})"
         self._finish(item_id, ItemStatus.HANDLED, outcome)
