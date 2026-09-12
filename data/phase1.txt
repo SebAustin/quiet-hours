@@ -1,2 +1,0 @@
-stop_reason: interrupt
-INTERRUPT {"id": "v1:before_tool_call:tooluse_NN2r1SXk6mPSypEKvMsUPf:b9e6f0f7-048e-5f43-a7b0-2b41b64a57ec", "name": "strands:human-in-the-loop", "reason": "Approve \"pay_bill\"?\n  Input: {\"amount\": 62.1, \"vendor\": \"Austin Water\"}"}

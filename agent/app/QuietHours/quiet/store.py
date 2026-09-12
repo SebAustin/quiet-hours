@@ -173,6 +173,11 @@ def _from_ddb(value: Any) -> Any:
     return value
 
 
+def _strip(raw: dict[str, Any]) -> dict[str, Any]:
+    raw.pop("_sk", None)
+    return raw
+
+
 class DynamoStore:
     PK_ITEM, PK_ACTION, PK_DECISION, PK_TRUST, PK_META = "ITEM", "ACTION", "DECISION", "TRUST", "META"
 
@@ -203,7 +208,7 @@ class DynamoStore:
             for raw in resp.get("Items", []):
                 raw = _from_ddb(raw)
                 raw.pop("PK", None)
-                raw.pop("SK", None)
+                raw["_sk"] = raw.pop("SK", None)
                 out.append(raw)
             if "LastEvaluatedKey" not in resp:
                 return out
@@ -212,9 +217,8 @@ class DynamoStore:
     def reset(self) -> None:
         for pk in (self.PK_ITEM, self.PK_ACTION, self.PK_DECISION, self.PK_TRUST):
             for raw in self._query(pk):
-                sk = raw.get("id") or raw.get("at")
-                if sk:
-                    self.table.delete_item(Key={"PK": pk, "SK": sk})
+                if raw.get("_sk"):
+                    self.table.delete_item(Key={"PK": pk, "SK": raw["_sk"]})
         for sk in ("clock", "profile", "digest"):
             self.table.delete_item(Key={"PK": self.PK_META, "SK": sk})
 
@@ -233,7 +237,7 @@ class DynamoStore:
         self._put(self.PK_META, "profile", {"value": profile})
 
     def list_items(self, status: ItemStatus | None = None) -> list[HouseholdItem]:
-        items = [HouseholdItem.model_validate(r) for r in self._query(self.PK_ITEM)]
+        items = [HouseholdItem.model_validate(_strip(r)) for r in self._query(self.PK_ITEM)]
         if status is not None:
             items = [i for i in items if i.status == status]
         return sorted(items, key=lambda i: (i.received_day, i.id))
@@ -249,7 +253,7 @@ class DynamoStore:
         self._put(self.PK_ACTION, f"{action.at}#{action.id}", action.model_dump(mode="json"))
 
     def list_actions(self) -> list[ActionRecord]:
-        return sorted((ActionRecord.model_validate(r) for r in self._query(self.PK_ACTION)), key=lambda a: a.at)
+        return sorted((ActionRecord.model_validate(_strip(r)) for r in self._query(self.PK_ACTION)), key=lambda a: a.at)
 
     def add_decision(self, decision: DecisionCard) -> None:
         self._put(self.PK_DECISION, decision.id, decision.model_dump(mode="json"))
@@ -261,13 +265,13 @@ class DynamoStore:
         return DecisionCard.model_validate(raw) if raw else None
 
     def list_decisions(self, status: DecisionStatus | None = None) -> list[DecisionCard]:
-        cards = [DecisionCard.model_validate(r) for r in self._query(self.PK_DECISION)]
+        cards = [DecisionCard.model_validate(_strip(r)) for r in self._query(self.PK_DECISION)]
         if status is not None:
             cards = [c for c in cards if c.status == status]
         return sorted(cards, key=lambda c: c.created_at)
 
     def list_trust_rules(self) -> list[TrustRule]:
-        return [TrustRule.model_validate(r) for r in self._query(self.PK_TRUST)]
+        return [TrustRule.model_validate(_strip(r)) for r in self._query(self.PK_TRUST)]
 
     def add_trust_rule(self, rule: TrustRule) -> None:
         self._put(self.PK_TRUST, rule.id, rule.model_dump(mode="json"))
