@@ -67,7 +67,8 @@ def _title(tool: str, inp: dict[str, Any], item: HouseholdItem) -> str:
     if tool == "schedule_appointment":
         return f"Book {inp.get('for_member', 'appointment')} with {vendor} on {inp.get('weekday')} {inp.get('time')}?"
     if tool == "submit_form":
-        return f"Sign and submit '{inp.get('form_name', 'form')}' for {vendor}?"
+        form = str(inp.get("form_name", "form")).replace("_", " ")
+        return f"Sign and submit '{form}' for {vendor}?" if inp.get("requires_signature") else f"Submit '{form}' for {vendor}?"
     return f"{tool.replace('_', ' ').capitalize()} for {vendor}?"
 
 

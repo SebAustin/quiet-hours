@@ -35,11 +35,11 @@
         },
         {
           "name": "QH_DECISION_SECRET",
-          "value": "eb786d970fc3146a94b20dce37f59b38"
+          "value": "${QH_DECISION_SECRET}"
         },
         {
           "name": "QH_SLACK_WEBHOOK_URL",
-          "value": ""
+          "value": "${QH_SLACK_WEBHOOK_URL}"
         },
         {
           "name": "QH_FAST_MODEL",
