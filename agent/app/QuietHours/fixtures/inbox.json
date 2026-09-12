@@ -7,7 +7,7 @@
    "body": "Your electricity usage was 1,640 kWh this cycle, up from 910 kWh last cycle. Amount due $214.37. A rate tier change applied on usage above 1,000 kWh."},
   {"id": "it-dentist", "day": 1, "source": "email", "sender": "hello@brightsmilespediatric.com", "vendor": "Bright Smiles Pediatric Dentistry",
    "subject": "Leo is due for his 6-month cleaning",
-   "body": "Hi Rivera family, Leo is due for a cleaning and check-up. Open slots: Tuesday day 2 at 16:00, Thursday day 4 at 09:30, Tuesday day 9 at 15:30, Wednesday day 10 at 11:00. Reply or book online."},
+   "body": "Hi Rivera family, Leo is due for a cleaning and check-up. Open slots: Tuesday day 9 at 15:30, Thursday day 4 at 09:30, Tuesday day 2 at 16:00, Wednesday day 10 at 11:00. Reply or book online."},
   {"id": "it-insurance", "day": 1, "source": "email", "sender": "renewals@lonestarauto.com", "vendor": "Lonestar Auto Insurance", "amount": 1412.00, "due_date": "day 14",
    "subject": "Your auto policy renews in 2 weeks: $1,412.00 for 6 months",
    "body": "Policy LA-88213 renews on day 14. New premium $1,412.00 (previous $1,196.00). Coverage unchanged. Renew online or contact an agent."},
