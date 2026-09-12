@@ -16,3 +16,5 @@ data/local/
 .DS_Store
 .pytest_cache/
 data/
+video/out/
+video/node_modules/
