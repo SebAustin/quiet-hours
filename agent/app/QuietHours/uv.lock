@@ -2065,7 +2065,7 @@ dependencies = [
     { name = "aws-opentelemetry-distro" },
     { name = "bedrock-agentcore" },
     { name = "botocore", extra = ["crt"] },
-    { name = "mcp" },
+    { name = "pydantic" },
     { name = "strands-agents" },
 ]
 
@@ -2074,8 +2074,8 @@ requires-dist = [
     { name = "aws-opentelemetry-distro", specifier = "~=0.18.0" },
     { name = "bedrock-agentcore", specifier = ">=1.9.1" },
     { name = "botocore", extras = ["crt"], specifier = ">=1.35.0" },
-    { name = "mcp", specifier = "~=1.24.0" },
-    { name = "strands-agents", specifier = ">=1.15.0" },
+    { name = "pydantic", specifier = ">=2.7" },
+    { name = "strands-agents", specifier = ">=1.55.0" },
 ]
 
 [[package]]

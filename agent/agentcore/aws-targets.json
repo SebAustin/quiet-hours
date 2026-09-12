@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "name": "default",
+    "description": "Quiet Hours hackathon account",
+    "account": "430411150226",
+    "region": "us-east-1"
+  }
+]

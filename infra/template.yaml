@@ -1,0 +1,125 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Quiet Hours — data store, API, and scheduler around the AgentCore Runtime agent.
+
+Parameters:
+  AgentRuntimeArn:
+    Type: String
+    Default: ""
+    Description: ARN of the deployed AgentCore Runtime (set after `agentcore deploy`).
+  SlackWebhookUrl:
+    Type: String
+    Default: ""
+    NoEcho: true
+  DashboardUrl:
+    Type: String
+    Default: "http://localhost:3000"
+  ApiKey:
+    Type: String
+    NoEcho: true
+    Description: Shared secret the dashboard sends as x-api-key.
+  DecisionSecret:
+    Type: String
+    NoEcho: true
+    Description: HMAC secret for one-click decision links (must match the agent's QH_DECISION_SECRET).
+  SweepRate:
+    Type: String
+    Default: "rate(30 minutes)"
+
+Globals:
+  Function:
+    Runtime: python3.13
+    Timeout: 600
+    MemorySize: 512
+    Architectures: [arm64]
+
+Resources:
+  Table:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: PK, AttributeType: S }
+        - { AttributeName: SK, AttributeType: S }
+      KeySchema:
+        - { AttributeName: PK, KeyType: HASH }
+        - { AttributeName: SK, KeyType: RANGE }
+
+  SessionsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - { Id: expire-old-sessions, Status: Enabled, ExpirationInDays: 30 }
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: api/
+      Handler: handler.lambda_handler
+      Environment:
+        Variables:
+          QH_TABLE_NAME: !Ref Table
+          QH_AGENT_RUNTIME_ARN: !Ref AgentRuntimeArn
+          QH_DASHBOARD_URL: !Ref DashboardUrl
+          QH_API_KEY: !Ref ApiKey
+          QH_DECISION_SECRET: !Ref DecisionSecret
+          QH_SLACK_WEBHOOK_URL: !Ref SlackWebhookUrl
+      FunctionUrlConfig:
+        AuthType: NONE
+        InvokeMode: BUFFERED
+        Cors:
+          AllowOrigins: ["*"]
+          AllowMethods: ["GET", "POST"]
+          AllowHeaders: ["content-type", "x-api-key"]
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref Table
+        - Statement:
+            - Effect: Allow
+              Action: ["bedrock-agentcore:InvokeAgentRuntime"]
+              Resource: "*"
+
+  SweepSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      ScheduleExpression: !Ref SweepRate
+      FlexibleTimeWindow: { Mode: "OFF" }
+      State: ENABLED
+      Target:
+        Arn: !GetAtt ApiFunction.Arn
+        RoleArn: !GetAtt SchedulerRole.Arn
+        Input: '{"mode": "sweep", "source": "scheduler"}'
+
+  SchedulerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: scheduler.amazonaws.com }
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: invoke-api
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt ApiFunction.Arn
+
+Outputs:
+  TableName:
+    Value: !Ref Table
+  SessionsBucketName:
+    Value: !Ref SessionsBucket
+  ApiUrl:
+    Value: !GetAtt ApiFunctionUrl.FunctionUrl
+  ApiFunctionName:
+    Value: !Ref ApiFunction

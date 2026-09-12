@@ -1,0 +1,23 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "QuietHoursTable",
+      "Effect": "Allow",
+      "Action": ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:DeleteItem", "dynamodb:Query", "dynamodb:Scan", "dynamodb:BatchWriteItem"],
+      "Resource": "arn:aws:dynamodb:us-east-1:430411150226:table/quiet-hours-*"
+    },
+    {
+      "Sid": "SessionsBucket",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::quiet-hours-sessionsbucket-*", "arn:aws:s3:::quiet-hours-sessionsbucket-*/*"]
+    },
+    {
+      "Sid": "AgentCoreMemory",
+      "Effect": "Allow",
+      "Action": ["bedrock-agentcore:CreateEvent", "bedrock-agentcore:ListEvents", "bedrock-agentcore:RetrieveMemories", "bedrock-agentcore:GetEvent", "bedrock-agentcore:ListSessions", "bedrock-agentcore:GetMemory"],
+      "Resource": "*"
+    }
+  ]
+}

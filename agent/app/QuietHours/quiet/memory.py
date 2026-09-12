@@ -47,7 +47,7 @@ class HouseholdMemory:
         try:
             records = self._client.retrieve_memories(
                 memory_id=self.memory_id,
-                namespace=f"/preferences/{self.settings.actor_id}/",
+                namespace=f"/users/{self.settings.actor_id}/preferences",
                 query=query,
                 top_k=top_k,
             )

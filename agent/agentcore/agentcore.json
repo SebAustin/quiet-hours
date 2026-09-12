@@ -15,10 +15,71 @@
       "codeLocation": "app/QuietHours/",
       "runtimeVersion": "PYTHON_3_14",
       "networkMode": "PUBLIC",
-      "protocol": "HTTP"
+      "protocol": "HTTP",
+      "envVars": [
+        {
+          "name": "QH_TABLE_NAME",
+          "value": "quiet-hours-Table-XT9UWG1BZXS3"
+        },
+        {
+          "name": "QH_SESSIONS_BUCKET",
+          "value": "quiet-hours-sessionsbucket-h6pohlhle1rb"
+        },
+        {
+          "name": "QH_API_BASE_URL",
+          "value": "https://xtouyx357qg4zqrxcc4g4f5rka0nedpm.lambda-url.us-east-1.on.aws"
+        },
+        {
+          "name": "QH_DASHBOARD_URL",
+          "value": "http://localhost:3000"
+        },
+        {
+          "name": "QH_DECISION_SECRET",
+          "value": "dea28f41aeb6babf7ded963697c1418d"
+        },
+        {
+          "name": "QH_SLACK_WEBHOOK_URL",
+          "value": ""
+        },
+        {
+          "name": "QH_FAST_MODEL",
+          "value": "us.amazon.nova-2-lite-v1:0"
+        },
+        {
+          "name": "QH_SMART_MODEL",
+          "value": "us.amazon.nova-pro-v1:0"
+        },
+        {
+          "name": "QH_ACTOR_ID",
+          "value": "rivera-household"
+        }
+      ],
+      "additionalPolicies": [
+        "policies/data-access.json"
+      ],
+      "description": "Quiet Hours household admin autopilot (Strands)"
     }
   ],
-  "memories": [],
+  "memories": [
+    {
+      "name": "HouseholdMemory",
+      "eventExpiryDuration": 30,
+      "strategies": [
+        {
+          "type": "USER_PREFERENCE",
+          "namespaceTemplates": [
+            "/users/{actorId}/preferences"
+          ]
+        },
+        {
+          "type": "SEMANTIC",
+          "namespaceTemplates": [
+            "/users/{actorId}/facts"
+          ]
+        }
+      ]
+    }
+  ],
   "knowledgeBases": [],
   "credentials": [],
   "evaluators": [],
