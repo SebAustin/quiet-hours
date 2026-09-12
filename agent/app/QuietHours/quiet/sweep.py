@@ -72,7 +72,7 @@ def _title(tool: str, inp: dict[str, Any], item: HouseholdItem) -> str:
     return f"{tool.replace('_', ' ').capitalize()} for {vendor}?"
 
 
-def cards_from_interrupts(settings: Settings, store: Store, item: HouseholdItem, policy: AutonomyPolicy, agent, result: AgentResult, sim_day: int) -> list[DecisionCard]:
+def cards_from_interrupts(settings: Settings, store: Store, item: HouseholdItem, policy: AutonomyPolicy, agent, result: AgentResult, sim_day: int, session_id: str) -> list[DecisionCard]:
     cards: list[DecisionCard] = []
     for interrupt in result.interrupts:
         tool_use = policy.tool_uses.get(_tool_use_id(interrupt.id), {})
@@ -82,7 +82,7 @@ def cards_from_interrupts(settings: Settings, store: Store, item: HouseholdItem,
         card = DecisionCard(
             item_id=item.id,
             category=item.category or Category.OTHER,
-            session_id=item_session_id(item.id),
+            session_id=session_id,
             interrupt_id=interrupt.id,
             tool=tool,
             input=inp,
@@ -104,12 +104,14 @@ async def _handle_item(settings: Settings, store: Store, memory: HouseholdMemory
     tools = HouseholdTools(store, memory, sim_day)
     audit = AuditHook(store, policy, item.id, sim_day)
     category = item.category or Category.OTHER
-    agent = build_specialist(settings, smart_model, category, item.id, store, policy, tools, audit)
+    session_id = item_session_id(item.id)
+    agent = build_specialist(settings, smart_model, category, session_id, store, policy, tools, audit)
+    item.metadata["session_id"] = session_id
     item.status = ItemStatus.IN_PROGRESS
     store.upsert_item(item)
     result = await agent.invoke_async(specialist_prompt(store, item, sim_day))
     if result.stop_reason == "interrupt":
-        cards = cards_from_interrupts(settings, store, item, policy, agent, result, sim_day)
+        cards = cards_from_interrupts(settings, store, item, policy, agent, result, sim_day, session_id)
         return {"item_id": item.id, "status": "needs_decision", "decisions": [c.id for c in cards]}
     fresh = store.get_item(item.id) or item
     if fresh.status == ItemStatus.IN_PROGRESS:  # specialist finished without a write tool

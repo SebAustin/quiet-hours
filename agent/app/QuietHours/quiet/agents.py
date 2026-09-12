@@ -9,7 +9,7 @@ from .domain import Category, DecisionStatus
 from .hooks import AuditHook
 from .memory import HouseholdMemory
 from .policy import READ_TOOLS, AutonomyPolicy
-from .sessions import build_session_manager, item_session_id
+from .sessions import build_session_manager
 from .store import Store
 from .tools import HouseholdTools
 
@@ -68,7 +68,7 @@ def build_specialist(
     settings: Settings,
     model,
     category: Category,
-    item_id: str,
+    session_id: str,
     store: Store,
     policy: AutonomyPolicy,
     tools: HouseholdTools,
@@ -82,7 +82,7 @@ def build_specialist(
         tools=tools.all_tools,
         interventions=[HumanInTheLoop(allowed_tools=READ_TOOLS, classifier=policy.classify, enable_trust=True)],
         hooks=[audit, *(extra_hooks or [])],
-        session_manager=build_session_manager(settings, item_session_id(item_id)),
+        session_manager=build_session_manager(settings, session_id),
         callback_handler=None,
     )
 

@@ -46,7 +46,7 @@ async def resume_decision_async(settings: Settings, store: Store, memory: Househ
     tools = HouseholdTools(store, memory, store.get_clock())
     audit = AuditHook(store, policy, item.id, store.get_clock(), mode_override=mode)
     extra_hooks = [LockdownHook(first_tool_use_id=card.interrupt_id.split(":")[2] if card.interrupt_id.count(":") >= 2 else None)] if choice == "deny" else []
-    agent = build_specialist(settings, smart_model, card.category, item.id, store, policy, tools, audit, extra_hooks=extra_hooks)
+    agent = build_specialist(settings, smart_model, card.category, card.session_id, store, policy, tools, audit, extra_hooks=extra_hooks)
 
     result = await agent.invoke_async([{"interruptResponse": {"interruptId": card.interrupt_id, "response": CHOICES[choice]}}])
 
@@ -73,7 +73,7 @@ async def resume_decision_async(settings: Settings, store: Store, memory: Househ
         store.upsert_item(fresh)
     new_cards = []
     if result.stop_reason == "interrupt":
-        new_cards = cards_from_interrupts(settings, store, fresh, policy, agent, result, store.get_clock())
+        new_cards = cards_from_interrupts(settings, store, fresh, policy, agent, result, store.get_clock(), card.session_id)
     elif fresh.status in (ItemStatus.IN_PROGRESS, ItemStatus.NEEDS_DECISION):
         fresh.status = ItemStatus.HANDLED
         fresh.outcome = fresh.outcome or str(result)[:300]
